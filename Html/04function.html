@@ -1,0 +1,127 @@
+<script language="JavaScript">
+
+    //dichiarazione tradizionale: 
+    //può essere chiamata prima della definizione
+    //hanno scope come var
+    console.log(foo());
+
+    function foo() {
+        function bar() {
+            console.log("Hello")
+        }
+        bar();
+        return 42;
+    }
+    //bar()		//non visibile scope come var
+
+    /*Si dice che un linguaggio di programmazione ha FUNZIONI DI PRIMA CLASSE quando le funzioni in quel 
+    linguaggio sono trattate come qualsiasi altra variabile. Ad esempio, in un tale linguaggio, 
+    una funzione può essere passata come argomento ad altre funzioni, può essere restituita da un'altra f
+    unzione e può essere assegnata come valore a una variabile. */
+
+    //FUNZIONI COME VARIABILI
+    //function literals: seguono lo scope delle variabili
+    //non possono essere richiamate prima della dichiarazione
+    //foo1()	//errore not defined
+    //bar1()	//errore not defined
+    foo1 = function () {
+        bar1 = function () {    //senza let/var visibilità globale
+            console.log("Hello1")
+        }
+        bar1()
+        return 42
+    }
+    foo1()
+    console.log("di nuovo")
+    bar1()		//visibile		
+
+
+    //FUNZIONI DI CALLBACK
+    function ask(question, yes, no) {
+        if (confirm(question))
+            yes()
+        else
+            no();
+    }
+
+    function showOk() {
+        alert("You agreed.");
+    }
+
+    function showCancel() {
+        alert("You canceled.");
+    }
+
+    ask("Do you agree?", showOk, showCancel);
+
+    //CON FUNZIONI ANONIME
+    ask("Do you agree?",
+        function () { alert("You agreed."); },
+        function () { alert("You canceled."); }
+    );
+
+    //CON FUNZIONI FRECCIA
+    ask("Do you agree?",
+        () => alert("You agreed."),
+        () => alert("You canceled.")
+    );
+
+    //funzioni freccia (anonime)
+    // Se ha un solo argomento le () si possono omettere	
+    const double = n => n * 2;
+    console.log(double(4))
+
+    //Se non ne ha si mette ()	
+    const sayHi = () => console.log("Hello!");
+    sayHi();
+
+    //Se contiene più di un'istruzione si usano {} e l'istruzione return
+    const sum = (a, b) => {
+        let result = a + b;
+        return result;
+    };
+    console.log(sum(1, 2)); // 3
+
+    //data eta se maggiorenne dice Buongiorno se no ciao
+    const chiediEta = function (seMaggiorenne, seMinorenne) {
+        const MAGGIORE_ETA = 18;
+        let eta = prompt("Quanti anni hai?")
+        // alert (isNaN(eta))
+        if (eta === '' || eta === null || isNaN(eta))
+            chiediEta(seMaggiorenne, seMinorenne)
+        else {
+            eta = eta * 1; // parseInt(eta);
+            if (eta >= MAGGIORE_ETA)
+                seMaggiorenne();
+            else
+                seMinorenne();
+        }
+    };
+
+    chiediEta(() => alert("Buongiorno"),
+        () => alert("Ciao"));
+
+
+    // PARAMETRI DI DEFAULT
+    function somma(x = 0, y = 0) {
+        let z = x + y; return z;
+    }
+    /* se al momento della chiamata non viene passato un argomento, 
+    ad esso viene assegnato il valore di default specificato, invece del valore undefined. 
+    Quindi la chiamata somma() senza argomenti restituirà il valore 0 anzichè NaN.
+    */
+    somma(3) //x=3 e y=0
+    somma(undefined, 5) //x=0, y=5
+
+</script>
+
+
+const double = function (n){
+    return n * 2;
+}
+
+const double = function (){
+    console.log("Hello")
+}
+
+x = (x > y) ? 4 : 5 #condizione se vero assegna il primo valore altrimenti il secondo valore

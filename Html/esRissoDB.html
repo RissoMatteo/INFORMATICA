@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id = "start">
+        <label for="cocktail">Scegli il drink: </label>
+        <select name="cocktail" id="cocktailSelection"></select>
+        <button type = "button" id = "button">Cerca cocktail</button>
+    </div>
+    <div id="risultato">
+        <div id="informazioni" class="card-container"></div>
+    </div>
+
+    <script>
+        const select = document.getElementById("cocktailSelection");
+        const informazioni = document.getElementById("informazioni");
+        const button = document.getElementById("button");
+        let datiJson;
+
+        fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a")
+            .then(response => response.json())
+            .then(data => {
+                datiJson = data;
+                console.log(datiJson);
+                if (datiJson.drinks && datiJson.drinks.length > 0) {
+                    datiJson.drinks.forEach(riga => {
+                        let optionDrink = document.createElement('option');
+                        optionDrink.value = riga.strDrink;
+                        optionDrink.textContent = riga.strDrink;
+                        select.appendChild(optionDrink);
+                    });
+                } else {
+                    console.log("Non esistono drink per questa lettera");
+                }
+            });
+        
+        
+
+    </script>
+
+</body>
+
+
+</html>

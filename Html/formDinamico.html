@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RissoForm</title>
+</head>
+<body>
+    <div>
+        <h1>RISSO FORM</h1>
+        <label>Nome:</label><br>
+        <input type="text" id="nome" name="nome"><br>
+        <label>Password:</label><br>
+        <input type="password" id="psw" name="psw"><br>
+        <button onclick="checkForm()">Invia</button>
+    </div>  
+
+    <script>
+        function checkForm() {
+            let nome = document.getElementById("nome");
+            let psw = document.getElementById("psw");
+
+            if (nome.value === "") {
+                nome.insertAdjacentHTML('afterend', 'nome non presente<br>');
+            }
+            if (psw.value == "") {
+                psw.insertAdjacentHTML('afterend', 'password non presente<br>');
+            }
+            if(nome.value != "" && psw.value != ""){
+                
+            }
+        }
+    </script>
+</body>
+</html>

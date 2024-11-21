@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <select id="select_provincia" name="select_provincia"></select>
+    <button type="button" id="button">Visualizza abitanti</button>
+    <div id="risultato">
+        
+    <script>
+        /*********
+         utilizzo il webserver di VSC 
+         **********/
+
+        const url = "./comuni_comp.json" //url che punta al json... può essere anche un url sul web
+        const select_provincia = document.getElementById("select_provincia")
+        const button = document.getElementById("button")
+        const informazioni = document.getElementById("risultato")
+        let datiJson
+
+        fetch(url)
+            .then(response => response.json()) //richiamo la funzione json
+            .then(dati => {
+                datiJson = dati
+                console.log(datiJson) //stampo l'oggetto creato dall'importazione del json
+                
+                let comuni = 0;
+                let somma_abitanti = 0;
+                let max_abitanti = 0;
+
+                datiJson.forEach(riga =>{ //scorro l'array di oggetti presente in provincia
+                    let option_comuni =  document.createElement("option")
+                    option_comuni.value = riga.nome
+                    option_comuni.textContent = riga.nome
+                    select_provincia.appendChild(option_comuni)
+                    if (riga.provincia.nome == "Cuneo"){
+                        console.log("---", riga.nome)
+                        comuni += 1;
+                        somma_abitanti += riga.popolazione;
+                        if(max_abitanti < riga.popolazione){
+                            max_abitanti = riga.popolazione;
+                        }
+                    }
+                }) 
+
+                button.addEventListener("click", function(e) {
+                e.preventDefault()
+                cancellaDiv()
+                if(datiJson){
+                    datiJson.forEach((riga => {
+                    let selezionato = select_provincia.value
+                    let abitanti = 0
+                    if (riga.provincia.nome == selezionato){
+                        abitanti = riga.popolazione
+                        let informazioni_comune = document.createElement('div');
+                        informazioni_comune.innerHTML = abitanti
+                        informazioni.appendChild(informazioni_comune)
+                    }
+                    }))
+                }
+            });
+            console.log("in tutto i comuni sono " + comuni);
+            console.log("in tutto gli abitanti sono " + somma_abitanti);
+            console.log("il numero massimo di abitanti è " + max_abitanti);
+                
+        })
+
+        function cancellaDiv() {
+            informazioni.innerHTML = "";
+        }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RISSO1VERIFICA</title>
+</head>
+<body>
+
+    <div id="titolo"></div>
+    <select id="squadre"></select><br>
+
+    <script>
+        const select = document.getElementById("squadre");
+        const url = "./squadre20_21.json"
+        
+        //leggo
+        fetch(url)
+        .then(response => response.json())
+        .then(dati => {
+            datiJson = dati;
+            console.log(datiJson) 
+            //console.log(datiJson.name)
+            const titoloDin = document.createElement('div');
+            titoloDin.innerHTML = `<h1>Campionato: ${datiJson.name}</h1>`;
+            titolo.appendChild(titoloDin);
+            //verifica se ce ne almeno una altrimenti mando messaggio di errore
+            if(datiJson.clubs.length > 0) {
+                datiJson.clubs.forEach(riga => {
+                    const option = document.createElement('option');
+                    option.value = riga.name;
+                    option.innerHTML = riga.name;
+                    select.appendChild(option);
+                });
+            } else {
+                console.log("Non è stata trovata nessuna squadra")
+            }
+        });
+    </script>
+</body>
+</html>

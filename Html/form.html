@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RissoForm</title>
+</head>
+<body>
+    
+    <div>
+        <h1>RISSO FORM</h1>
+        <label>Nome:</label><br>
+        <input type="text" id="nome" name="nome"><br>
+        <label>Cognome:</label><br>
+        <input type="text" id="cognome" name="cognome">
+    </div>
+
+    <div>
+        <h1>ANAGRAFE</h1>
+        <label>Luogo di nascita:</label><br>
+        <input type="text" id="LuogoNascita" name="LuogoNascita"><br>
+        <label>Data di nascita:</label><br>
+        <input type="date" id="DataNascita" name="DataNascita"><br>
+        <label>Codice Fiscale:</label><br>
+        <input type="text" id="fiscale" name="fiscale"><br>
+        <label>Indirizzo:</label><br>
+        <input type="text" id="Indirizzo" name="Indirizzo"><br>
+        <label>Comune:</label><br>
+        <input type="text" id="Comune" name="Comune"><br>
+        <label>Sesso:</label><br>
+        <input type="text" id="sesso" name="sesso"><br>
+    </div>      
+
+    <div>
+        <h1>CONTATTI</h1>
+        <label>Cellulare:</label><br>
+        <input type="text" id="Cellulare" name="Cellulare"><br>
+        <label>Email:</label><br>
+        <input type="text" id="Email" name="Email"><br>
+    </div>
+
+    <div>
+        <h1>PRESA VISIONE</h1>
+        <input type="checkbox" id="presa-visione" name="presa-visione">
+        <label for="presa-visione">accettare termini e condizioni</label>
+        
+    </div>
+
+    <div>
+        <button onclick="controllaEta()">Invia</button>
+    </div>
+
+    <script>
+        function controllaEta() {
+            // Ottieni la data di nascita
+            var dataNascita = new Date(document.getElementById("DataNascita").value);
+            // Calcola la data di nascita meno 18 anni
+            var dataMinima = new Date();
+            dataMinima.setFullYear(dataMinima.getFullYear() - 18);
+            // Controlla se la data di nascita è maggiore della data minima consentita
+            if (dataNascita <= dataMinima) {
+                // Invia il modulo o esegui altre azioni qui
+                alert("Modulo inviato!");
+            } else {
+                alert("Devi essere maggiorenne per continuare.");
+            }
+            
+        }
+
+        //mediante l'insertadjacenthtml scrivi al momento del tasto invia a fianco a ogni campo se è vuoto la stringa ({name} non presente)
+    </script>
+
+
+</body>
+</html>
