@@ -1,0 +1,81 @@
+3.
+--Targa e Nome del proprietario delle Auto di cilindrata superiore a 2000 cc oppure di potenza superiore a
+120 CV, assicurate presso la “SARA”
+SELECT AUTO.Targa,PROPRIETARI.Nome
+FROM AUTO
+JOIN PROPRIETARI ON AUTO.CodF = PROPRIETARI.CodF
+JOIN ASSICURAZIONI ON AUTO.CodAss = ASSICURAZIONI.CodAss
+WHERE (AUTO.Cilindrata > 2000 OR AUTO.Potenza > 120)
+AND ASSICURAZIONI.Nome LIKE 'SARA'
+
+4.
+--Targa e Nome del proprietario delle Auto assicurate presso la “SARA” e coinvolte in sinistri il 20/01/02
+SELECT AUTO.Targa, PROPRIETARI.Nome
+FROM AUTO
+JOIN PROPRIETARI ON AUTO.CodF = PROPRIETARI.CodF
+JOIN ASSICURAZIONI ON AUTO.CodAss = ASSICURAZIONI.CodAss
+JOIN AUTOCONINVOLTE ON AUTO.Targa = AUTOCONINVOLTE.Targa
+JOIN SINISTRI ON AUTOCONINVOLTE.CodS = SINISTRI.CodS
+WHERE ASSICURAZIONI.Nome like 'SARA'
+AND SINISTRI.DataIncidente = '2002-01-20'
+
+6.
+--Per ciascuna assicurazione, il numero di auto rimborsate e il numero di quelle non rimborsate
+SELECT ASSICURAZIONI.Nome AS Assicurazione,COUNT(AUTOCONINVOLTE.DataRimborso) AS AutoRimborsate,COUNT(*) - COUNT(AUTOCONINVOLTE.DataRimborso) AS AutoNonRimborsate
+FROM ASSICURAZIONI,AUTO, AUTOCONINVOLTE 
+WHERE ASSICURAZIONI.CodAss = AUTO.CodAss
+AND AUTO.Targa = AUTOCONINVOLTE.Targa
+GROUP BY ASSICURAZIONI.Nome
+
+8.
+--Per ciascuna auto coinvolta in più di un sinistro, la targa dell’auto, 
+--il nome dell’Assicurazione ed il totale
+--dei danni riportati, in ordine decrescente di sinistri subiti
+SELECT AUTO.Targa AS Targa,ASSICURAZIONI.Nome AS Assicurazione, SUM(AUTOCONINVOLTE.ImportoDelDanno) AS TotaleDanni, COUNT(SINISTRI.CodS) AS NumeroSinistri
+FROM AUTO
+JOIN ASSICURAZIONI ON AUTO.CodAss = ASSICURAZIONI.CodAss
+JOIN AUTOCONINVOLTE ON AUTO.Targa = AUTOCONINVOLTE.Targa
+JOIN SINISTRI ON AUTOCONINVOLTE.CodS = SINISTRI.CodS
+GROUP BY AUTO.Targa, ASSICURAZIONI.Nome
+HAVING COUNT(SINISTRI.CodS) > 1
+ORDER BY COUNT(SINISTRI.CodS) DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,5 @@
+INSERT INTO "Genitori" ("CodGenitore", "CodFiglio") VALUES
+('MRORSS60A01H501U', 'GSTBNC80D04F205X'),  -- Mario Rossi è genitore di Giovanni Bianchi
+('LCABNC70B02F205Z', 'GSTBNC80D04F205X'),  -- Luca Bianchi è genitore di Giovanni Bianchi
+('LCABNC70B02F205Z', 'LUVPRZ85H12F205Z'),  -- Luca Bianchi è genitore di Luisa Perez
+('FRAVNT75C03D612Y', 'ANTVRD95L08H501U');  -- Francesca Verdi è genitore di Antonio Verdi

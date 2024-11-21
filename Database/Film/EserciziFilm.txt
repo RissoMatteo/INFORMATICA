@@ -1,0 +1,236 @@
+1.
+SELECT nome
+FROM sale
+WHERE citta = 'Pisa';
+
+2.
+SELECT titolo
+FROM film
+WHERE regista LIKE '%Fellini%'
+AND annoProduzione > 1960;
+
+3.
+SELECT titolo, durata
+FROM film
+WHERE UPPER(genere) = 'FANTASCIENZA' AND (nazionalita = 'Giapponese' OR nazionalita = 'Francese') AND annoProduzione > 1990;
+
+4.
+SELECT titolo
+FROM film
+WHERE (genere = 'Fantascienza AND nazionalita = Giapponese AND annoProduzione > 1990)
+OR nazionalita = 'Francese'
+
+5.
+SELECT DISTINCT titolo, genere 
+FROM film, proiezioni
+WHERE data = "2004-12-25" AND film.codFilm = proiezioni.codFilm
+
+6.
+--Il titolo ed il genere dei film proiettati il giorno di Natale 2004
+SELECT DISTINCT titolo, genere 
+FROM film, proiezioni, sale
+WHERE data = "2004-12-25" AND film.codFilm = proiezioni.codFilm 
+AND sale.citta = "Napoli" 
+AND sale.codSala = proiezioni.codSala
+
+7.
+-- I nomi delle sale di Napoli in cui il giorno di Natale 2004 
+-- è stato proiettato un film con R.Williams
+SELECT DISTINCT sale.nome
+FROM proiezioni, sale, attori, recita
+WHERE proiezioni.data = "2004-12-25" 
+AND sale.citta = "Napoli" 
+AND attori.nome LIKE "%Williams%"
+AND recita.codAttore = attori.codAttore
+AND recita.codFilm = proiezioni.codFilm
+AND proiezioni.codSala = sale.codSala
+
+--Trovare le nazioni dove è stato girato un film o è nato un attore
+SELECT attori.nazionalita
+FROM attori
+
+UNION
+
+SELECT film.nazionalita
+FROM film
+
+13
+- Il numero di sale di Pisa con più di 60 posti
+SELECT count(*)
+FROM sale
+WHERE posti > 60 AND citta LIKE "pisa"
+
+14
+--Il numero totale di posti nelle sale di Pisa
+SELECT citta, sum(posti)
+FROM sale
+WHERE citta LIKE "pisa"
+
+16
+--Per ogni città, il numero di sale con più di 60 posti
+SELECT count(*)
+FROM sale
+WHERE posti > 60
+GROUP BY citta
+
+17
+--Per ogni regista, il numero di film diretti dopo il 1990
+SELECT regista, count(*)
+FROM film
+WHERE annoProduzione > 1990
+GROUP BY regista
+
+--per ogni film il numero di attori che recita in quel fill
+SELECT titolo, count(*) AS num_attori
+FROM film, recita
+WHERE film.codFilm = recita.codFilm
+GROUP BY titolo,film.codFilm
+
+--i film in cui recitano piu di 10 attori
+SELECT titolo, count(*) AS num_attori 
+FROM film, recita
+WHERE film.codFilm = recita.codFilm
+GROUP BY titolo,film.codFilm
+HAVING count(*) > 10 --Having è una where del gruop by (metto una condizione al group by)
+
+--elenco delle citta con piu di 3 sale
+SELECT citta, count(*) AS numero_sala
+FROM sale
+GROUP BY citta
+HAVING numero_sala > 3
+ORDER BY numero_sala	
+
+18
+--Per ogni regista, l’incasso totale di tutte le proiezioni dei suoi film
+SELECT  film.regista, sum(incasso) AS incasso_totale
+FROM film JOIN proiezioni ON film.codFilm = proiezioni.codFilm
+GROUP BY regista 
+
+19
+--Per ogni film di S.Spielberg, il titolo del film, il numero totale di proiezioni a Pisa e l’incasso totale
+SELECT attori.nome AS nome_attore,film.titolo, count(*) AS tot_proiezioni ,sum(incasso) AS tot_incasso
+FROM attori, recita, proiezioni, film, sale
+WHERE attori.nome LIKE "%pielbe%"
+AND attori.codAttore = recita.codAttore
+AND recita.codFilm = film.codFilm
+AND film.codFilm = proiezioni.codFilm
+AND proiezioni.codSala = sale.codSala
+AND sale.citta like "pisa"
+GROUP BY titolo
+
+20
+--Per ogni regista e per ogni attore, il numero di film del regista con l’attore
+SELECT film.regista, attori.nome AS nome_attore, COUNT(*) AS num_film
+FROM film
+JOIN recita ON recita.codFilm = film.codFilm
+JOIN attori ON attori.codAttore = recita.codAttore
+GROUP BY film.regista, attori.nome
+
+21
+-- Il regista ed il titolo dei film in cui recitano meno di 6 attori
+SELECT film.regista, film.titolo, count(recita.codAttore) as nAttori
+FROM film
+JOIN recita ON recita.codFilm = film.codFilm
+GROUP BY film.codFilm, film.regista, film.titolo
+HAVING nAttori < 2;
+
+22
+--Per ogni film prodotto dopo il 2000, il codice, il titolo e l’incasso totale di tutte le sue proiezioni
+SELECT film.codFilm, film.titolo, sum(incasso) AS incassotot
+FROM film 
+JOIN proiezioni ON film.codFilm = proiezioni.codFilm
+WHERE film.annoProduzione > 2000
+GROUP BY film.titolo
+
+23
+-- Il numero di attori dei film in cui appaiono solo attori nati prima del 1970
+SELECT count(*)
+FROM attori
+JOIN recita ON recita.codAttore = attori.codAttore
+JOIN film ON film.codFilm = recita.codFilm
+WHERE attori.annoNascita < 1970
+
+24
+--Per ogni film di fantascienza, il titolo e l’incasso totale di tutte le sue proiezioni
+SELECT film.titolo, sum(proiezioni.incasso) AS incassoTot
+FROM film 
+JOIN proiezioni ON proiezioni.codFilm = film.codFilm
+WHERE film.genere LIKE "%fantascienza%"
+GROUP BY film.codFilm
+
+25
+--Per ogni film di fantascienza il titolo e l’incasso totale di tutte le sue proiezioni successive al 1/1/01
+SELECT film.titolo, sum(proiezioni.incasso) AS incassoTot
+FROM film 
+JOIN proiezioni ON proiezioni.codFilm = film.codFilm
+WHERE film.genere LIKE "%fantascienza%"
+AND strftime('%Y', proiezioni.data) > '2000'
+GROUP BY film.codFilm
+
+26
+--Per ogni film di fantascienza che non è mai stato proiettato prima del 1/1/01 il titolo e l’incasso totale 
+--di tutte le sue proiezioni
+SELECT film.titolo, sum(proiezioni.incasso) AS incassoTot
+FROM film 
+JOIN proiezioni ON proiezioni.codFilm = film.codFilm
+WHERE film.genere LIKE "%fantascienza%"
+GROUP BY film.codFilm
+HAVING min(proiezioni.data) >= '2001-01-01'
+
+27
+--Per ogni sala di Pisa, che nel mese di gennaio 2005 ha incassato più di 20000 €, il nome della
+--sala e l’incasso totale (sempre del mese di gennaio 2005)
+SELECT sale.nome, SUM(proiezioni.incasso) AS totIncasso
+FROM sale 
+JOIN proiezioni ON proiezioni.codSala = sale.codSala
+WHERE strftime('%Y-%m', proiezioni.data) = '2005-01'
+AND sale.citta LIKE "Pisa"
+GROUP BY sale.codSala
+HAVING totIncasso > 20000;
+
+37
+--elenco degli attori che sono anche registi
+SELECT nome
+FROM attori
+LEFT JOIN film ON attori.nome = film.regista
+WHERE codFilm IS NOT NULL
+
+38
+--Elenco degli attori che non sono registi
+SELECT nome
+FROM attori
+LEFT JOIN film ON attori.nome = film.regista
+WHERE codFilm IS NULL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+

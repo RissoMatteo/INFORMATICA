@@ -1,0 +1,117 @@
+CREATE TABLE "Artisti" (
+	"codA"	INTEGER NOT NULL UNIQUE,
+	"nomeA"	CHAR(20) NOT NULL,
+	"nazionalita"	CHAR(20) NOT NULL,
+	PRIMARY KEY("codA" AUTOINCREMENT)
+)
+
+CREATE TABLE "Musei" (
+	"codM"	INTEGER NOT NULL UNIQUE,
+	"nomeM"	CHAR(20) NOT NULL,
+	"citta"	CHAR(20) NOT NULL,
+	PRIMARY KEY("codM" AUTOINCREMENT)
+)
+
+CREATE TABLE "Opere" (
+	"codice"	INTEGER NOT NULL UNIQUE,
+	"titolo"	CHAR(20) NOT NULL,
+	"codM"	INTEGER,
+	"codA"	INTEGER NOT NULL,
+	PRIMARY KEY("codice" AUTOINCREMENT),
+	FOREIGN KEY("codA") REFERENCES "Artisti"("codA") ON DELETE RESTRICT ON UPDATE CASCADE,
+	FOREIGN KEY("codM") REFERENCES "Musei"("codM") ON DELETE RESTRICT ON UPDATE CASCADE
+)
+
+CREATE TABLE "Personaggi" (
+	"personaggio"	CHAR(20) NOT NULL,
+	"codice"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("personaggio"),
+	FOREIGN KEY("codice") REFERENCES "Opere"("codice")
+)
+
+1.
+--Il codice ed il titolo delle opere di Tiziano conservate alla “National Gallery”.
+SELECT Opere.codice, Opere.titolo
+FROM Artisti, Musei, Opere
+WHERE Artisti.nomeA = "Tiziano"
+AND Artisti.codA = Opere.codA
+AND Opere.codM = Musei.codM
+
+2.
+--Le opere di artisti sconosciuti
+SELECT Opere.titolo
+FROM Opere, Artisti
+WHERE Artisti.nomeA like "SCONOSCIUTO"
+AND Artisti.codA = Opere.codA
+
+3.
+--Le opere che non sono conservate in musei in ordine alfabetico
+SELECT *
+FROM Opere
+WHERE codM IS NULL
+ORDER BY titolo
+
+4-5.
+--Il nome dell’artista ed il titolo delle opere conservate alla “Galleria degli Uffizi” o alla “National Gallery”.
+SELECT Artisti.nomeA, Opere.titolo
+FROM Artisti, Opere, Musei
+WHERE (Musei.nomeM = "Galleria degli Uffizi" OR Musei.nomeM = "National Gallery")
+AND Musei.codM = Opere.codM
+AND Opere.codA = Artisti.codA
+
+oppure
+
+SELECT Artisti.nomeA, Opere.titolo
+FROM Artisti, Opere, Musei
+WHERE Musei.nomeM IN ( "Galleria degli Uffizi" , "National Gallery")
+AND Musei.codM = Opere.codM
+AND Opere.codA = Artisti.codA
+
+6.
+--Il nome dell’artista ed il titolo delle opere conservate nei musei di Firenze
+SELECT Artisti.nomeA, Opere.titolo
+FROM Artisti, Opere, Musei
+WHERE Musei.citta = "Firenze"
+AND Musei.codM = Opere.codM
+AND Opere.codA = Artisti.codA
+
+7.
+--Le città in cui sono conservate opere di Caravaggio
+SELECT Musei.citta
+FROM Artisti, Opere, Musei
+WHERE Artisti.nomeA = "Caravaggio"
+AND Artisti.codA = Opere.codA
+AND Opere.codM = Musei.codM
+
+8.
+--Il codice ed il titolo delle opere di Tiziano conservate nei musei di Londra
+SELECT DISTINCT Opere.codice, Opere.titolo
+FROM Musei, Opere, Artisti
+WHERE Artisti.nomeA = "Tiziano"
+AND Artisti.codA = Opere.codA
+AND Opere.codA = Musei.codM
+
+9.
+--Il nome dell’artista ed il titolo delle opere di artisti spagnoli conservate nei musei di Firenze
+SELECT Artisti.nomeA, Opere.titolo
+FROM Artisti, Opere, Musei
+WHERE Artisti.nazionalita = "Spagnola"
+AND Artisti.codA = Opere.codA
+AND Opere.codM = Musei.codM
+AND Musei.citta = "Firenze"
+
+10.
+--Il codice ed il titolo delle opere di artisti italiani conservate nei musei di Londra, in cui è rappresentata la
+--Madonna
+SELECT Opere.codice, Opere.titolo
+FROM Musei, Opere, Artisti, Personaggi
+WHERE Artisti.nazionalita = "Italiana"
+AND Personaggi.personaggio = "Madonna"
+AND Artisti.codA = Opere.codA
+AND Opere.codM = Musei.codM
+AND Musei.citta = "Londra"
+
+
+
+
+

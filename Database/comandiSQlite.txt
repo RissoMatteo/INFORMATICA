@@ -1,0 +1,134 @@
+CREATE TABLE sedeA (
+    codOperaio CHAR(4),
+    sesso CHAR(1) NOT NULL CHECK (sesso IN ('M', 'F', 'm', 'f')),
+    assuntoIl DATE NOT NULL,
+    stipendio DECIMAL(10,2) NOT NULL CHECK (stipendio >= 0),
+    codR INTEGER NOT NULL,
+    PRIMARY KEY (codOperaio),
+    FOREIGN KEY (codR) REFERENCES responsabili(codResp)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-------- 
+
+INSERT INTO sedeA
+(codOperaio, sesso, assuntoIl, stipendio, codR)
+VALUES
+("GVDT", "F", "2010-04-14", 990.00, 2)
+---------
+
+DELETE FROM sedaA
+WHERE codOperaio = "VDLC"
+
+---------
+
+UPDATE sedeA
+SET stipendio = stipendio + 10
+WHERE sesso = "F"
+
+---------
+
+(operazione per cercare)
+
+SELCT * //seleziono tutti i campi
+
+SELECT *
+FROM sedeA
+WHERE sesso = "M"
+//taglio orizzontale
+
+SELECT codOperaio, stipendio
+FROM sedeA
+WHERE sesso = "M"
+//taglio verticale
+
+SELECT stipendio
+FROM sedeA
+WHERE sesso = "M"
+ORDER BY stipendio
+//stipendi dei maschi
+ORDER BY stipendio DESC
+////stipendi dei maschi in ordine decrescente
+
+SELECT  DISTINCT stipendio
+FROM sedeA
+WHERE sesso = "M"
+ORDER BY stipendio DESC
+//distinct serve a non fare uscire risultati uguali nella stampa
+
+SELECT *
+FROM sedeB, responsabili
+//mette tutte le righe in combinazioone con tutte le altre righe delle tabelle nel from
+//si chiamano tabelle relazionali dove le righe vengono chiamate TUPLE e il numero di tutte delle colonne il GRADO, 
+il numero delle righe si chiama CARDINALITA', l'insieme delle righe con tutti i valore si chiama ISTANZA (tabella completa)
+//la tabella risultato del prodotto cartesiano avrà un grado uguale alla somma dei gradi delle tabelle di partenza
+//la cardinalità è il prodotto tra le varie cardinalità 
+
+SELECT b.*,cognome, nome  
+FROM sedeB b, responsabili r
+WHERE b.codR = r.cod_resp
+//affianca a tabella b il numero dei responsabili ai responsabili
+//b. = sedeB (questo serve solo nel caso in cui si hanno due record uguali nelle tabelle a confronto)
+
+SELECT b.*,cognome AS "cognome responsabili", nome
+FROM sedeB b, responsabili r
+WHERE b.codR = r.cod_resp
+//rinomino le intestazioni di colonna
+//b. = sedeB
+
+SELECT b.*,cognome AS "cognome responsabili", nome
+FROM sedeB b, responsabili r
+WHERE b.codR = r.cod_resp AND sesso = "F"
+//solo le femmine
+
+SELECT a.*,cognome AS "cognome responsabili", nome  
+FROM sedeA a, responsabili r
+WHERE a.codR = r.cod_resp AND strftime("%Y", assuntoIl) = "2011"
+//restituisce tutti gli operai della sede A con data di assunzione nel 2011
+
+//CONTROLLO DATA
+YEAR(annoNascita)<YEAR(currentday)
+
+SELECT *
+FROM game, genre
+WHERE genre_name LIKE "Fig%" AND game.genre_id = genre.id
+//F% cerca tutti quelli che iniziano con F
+//%F% cerca tutti quelli che hanno una f in mezzo alla parola
+//%f cerca solo quelli che finiscono in f
+
+SELECT COUNT(*)
+//restituisce il numero di rige della tabella
+
+SELECT *
+FROM attori
+UNION
+SELECT * 
+FROM proiezioni
+//fa unione delle tabelle in FROM con il distinct incluso, Usando UNION ALL ripete anche quelli uguali
+//solo con 2 tabelle uguali
+
+SELECT
+FROM
+GROUP BY //raggruppa ogni tipo di quella tabella : tabella sesso = f,f,f,f,m,m,m,mf,mf,m Output: f, m
+
+--MAX MIN MEDIA
+SELECT max(stipendio) AS massimo, min(stipendio) AS minimo, avg(stipendio) AS medio
+FROM sedeA
+
+HAVING count(*) > 10 --Having è una where del gruop by (metto una condizione al group by) -> esempio in film:esercizi
+
+CONGIUNZIONE = metto in relazione le righe di una tabella con le righe di un altra, facendole combaciare
+PRODOTTO CARTESIANO = combino tutte le righe di una tabella con tutte le righe di un altra, senza WHERE in pratica	
+
+
+
+
+
+
+
+
+
+
+
+
+

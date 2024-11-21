@@ -1,0 +1,75 @@
+CREATE TABLE "Alunni" (
+	"ID"	INTEGER UNIQUE,
+	"cognome"	VARCHAR(50) NOT NULL CHECK("cognome" REGEXP '^[A-Z][a-z]+$'),
+	"nome"	VARCHAR(50) NOT NULL CHECK("nome" REGEXP '^[A-Z][a-z]+$'),
+	"id_rappresentante"	INT,
+	"classe"	VARCHAR(3) NOT NULL CHECK("classe" REGEXP '^[1-5][A-Z]$'),
+	"media_voti"	DECIMAL(3, 1) NOT NULL CHECK("media_voti" > 0 AND "media_voti" <= 10),
+	PRIMARY KEY("ID" AUTOINCREMENT)
+);
+
+ES_B
+--aggiungi 3 alunni con comando SQL
+INSERT INTO Alunni(ID, cognome, nome, id_rappresentante, classe, media_voti)
+VALUES(16, "Risso", "Matteo", 11, "4B", 9.0);
+INSERT INTO Alunni(ID, cognome, nome, id_rappresentante, classe, media_voti)
+VALUES(17, "Ciobanu", "Adrian", 11, "4B", 4.0)
+INSERT INTO Alunni(ID, cognome, nome, id_rappresentante, classe, media_voti)
+VALUES(18, "Ciobanu", "Adrian", 11, "4B", 4.0)
+
+ES_C
+--elenca tutti gli alunni rappresentanti dalle varie classi
+SELECT *
+FROM Alunni
+WHERE id_rappresentante IS NULL
+
+ES_D
+--elenca tutti gli studenti che hanno la media dei voti superiore al prorpio compagno di classe
+SELECT a.cognome, a.nome, a.media_voti, a.classe, rapp.cognome, rapp.nome, rapp.media_voti 
+FROM Alunni a, Alunni rapp
+WHERE a.id_rappresentante = rapp.ID
+AND A.media_voti > rapp.media_voti
+
+ES_E
+--elenca tutti gli alunni che hanno la media dei
+--voti compresa tra 6 e 7
+SELECT *
+FROM Alunni	
+WHERE media_voti > 6 AND media_voti < 7
+
+ES_G
+--Elenca tutti gli studenti che hanno la media dei
+--voti inferiore a quella di "Giadini Ennio"
+SELECT a.classe, a.cognome, a.nome, a.media_voti
+FROM Alunni a, Alunni g
+WHERE a.media_voti < g.media_voti 
+AND g.cognome = "Gardini" 
+AND g.nome = "Ennio"
+
+ES_H
+--aumenta la media del 10% a tutti i rappresentanti
+--del 10 %
+
+UPDATE Alunni
+SET media_voti = media_voti * 1.1
+WHERE id_rappresentante IS NULL
+
+
+//crea una vista , aggiorna in automatico i dati, select memorizzata
+CREATE VIEW "Migliori" AS 
+SELECT a.cognome, a.nome, a.media_voti, a.classe, rapp.cognome, rapp.nome, rapp.media_voti 
+FROM Alunni a, Alunni rapp
+WHERE a.id_rappresentante = rapp.ID
+--AND A.media_voti > rapp.media_voti
+
+
+SELECT a.classe, a.cognome, a.nome, a.media_voti,
+(g.media_voti - a.media_voti) AS differenza 
+FROM Alunni a, Alunni g
+WHERE a.media_voti < g.media_voti 
+AND g.cognome = "Gardini" 
+AND g.nome = "Ennio"
+ORDER BY a.media_voti DESC
+//aggiunggo una colonna, posso calcolare	
+
+

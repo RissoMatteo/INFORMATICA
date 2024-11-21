@@ -1,0 +1,93 @@
+--Faccio apparire una tabella supereroi dove al posto dei numeri id escono direttamnte i campi collegati alla tabella associata
+
+SELECT superhero.superhero_name, superhero.full_name, gender.gender, c_occhi.colour, c_capelli.colour, c_skin.colour, race.race, publisher.publisher_name, alignment.alignment
+FROM superhero, gender, colour AS c_occhi, colour AS c_capelli, colour AS c_skin, race, publisher, alignment
+WHERE superhero.superhero_name LIKE "%bat%"
+AND superhero.gender_id = gender.id
+AND superhero.eye_colour_id = c_occhi.id
+AND superhero.hair_colour_id = c_capelli.id
+AND superhero.skin_colour_id = c_skin.id
+AND superhero.race_id = race.id
+AND superhero.publisher_id = publisher.id
+AND superhero.alignment_id = alignment.id
+
+SELECT SUM(weight_kg) //somma dei pesi di chi ha spider nel nome
+FROM superhero
+WHERE superhero.superhero_name LIKE "%spider%"
+
+SELECT
+FROM
+GROUP BY //raggruppa ogni tipo di quella tabella : tabella sesso = f,f,f,f,m,m,m,mf,mf,m Output: f, m
+
+tot kg per razza
+SELECT race.race, SUM(weight_kg) AS "PesoTot"
+FROM race, superhero
+WHERE superhero.race_id = race.id
+GROUP BY race.id
+
+media altezze di tutti i supereroi
+SELECT AVG(superhero.height_cm)
+FROM superhero
+
+media altezze di tutti i saiyan
+SELECT AVG(height_cm)
+FROM superhero, race
+WHERE race.race LIKE "%Saiyan%"
+AND superhero.race_id = race.id
+
+--creazione della tabella hero_armi per far si che un supereroe possa possedere piu armi 
+CREATE TABLE hero_armi (
+    id_superhero INTEGER NOT NULL,
+    id_arma INTEGER NOT NULL,
+    PRIMARY KEY (id_superhero, id_arma),
+    FOREIGN KEY (id_superhero) REFERENCES superhero(id),
+    FOREIGN KEY (id_arma) REFERENCES armi(id)
+)
+
+--popolo la tabella armi con almeno 10 armi
+INSERT INTO armi (id, arma)
+VALUES
+(1, 'Spada'),
+(2, 'Arco'),
+(3, 'Mazza'),
+(4, 'Pistola'),
+(5, 'Fucile'),
+(6, 'Ascia'),
+(7, 'Lancia'),
+(8, 'Balestra'),
+(9, 'Lama corta'),
+(10, 'Spada laser');
+
+--tutti i superhero che hanno almeno un'arma
+SELECT superhero.superhero_name
+FROM superhero
+JOIN hero_armi on superhero.id = hero_armi.id_superhero
+GROUP by hero_armi.id_superhero
+HAVING count(*) > 1
+
+---- visualizzare tutti i superhero con il numero di armi assegnate
+SELECT superhero.superhero_name, COUNT(hero_armi.id_arma) AS numeroArmi
+FROM superhero
+LEFT JOIN hero_armi ON superhero.id = hero_armi.id_superhero
+GROUP BY superhero.id
+
+--visualizzare tutti i superhero che usano la "spada"
+SELECT superhero.superhero_name, armi.arma
+FROM superhero
+JOIN hero_armi on superhero.id = hero_armi.id_superhero
+JOIN armi on hero_armi.id_arma = armi.id 
+WHERE armi.arma LIKE "%spada%"
+
+
+
+
+
+
+
+
+
+
+
+
+
+

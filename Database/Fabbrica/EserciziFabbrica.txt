@@ -1,0 +1,210 @@
+3.
+UPDATE sedeA
+SET codR = 2
+WHERE codOperaio = "PLFR"
+
+4.
+IMPOSSIBILE
+
+5.
+UPDATE sedeA
+SET stipendio = stipendio + 30
+WHERE codR = 2 OR codR = 3
+
+6.
+--dati comuni tra sedeA e sedeB
+SELECT sedeA.codOperaio AS operaiComuni
+FROM sedeA JOIN sedeB
+ON sedeA.codOperaio = sedeB.codOperaio
+
+7
+--unione di sedeA e sedeB
+SELECT codOperaio
+FROM sedeA
+UNION
+SELECT codOperaio
+FROM sedeB
+
+8
+--Elenco dei dati presenti esclisivamente in sedeA
+SELECT *
+FROM sedeA LEFT JOIN sedeB
+ON sedeA.codOperaio = sedeB.codOperaio
+WHERE sedeB.codOperaio IS NULL --escono solo quelli della sede a esclusa intersesione
+
+9
+--Elenco dei dati presenti esclisivamente in sedeA
+SELECT *
+FROM sedeA LEFT JOIN sedeB
+ON sedeA.codOperaio = sedeB.codOperaio
+WHERE sedeB.codOperaio IS NULL --escono solo quelli della sede a esclusa intersesione
+
+UNION
+
+--Elenco dei dati presenti esclisivamente in sedeB
+SELECT *
+FROM sedeB LEFT JOIN sedeA
+ON sedeA.codOperaio = sedeB.codOperaio
+WHERE sedeA.codOperaio IS NULL --escono solo quelli della sede a esclusa intersesione
+
+10.
+SELECT *
+FROM sedeA
+WHERE codR = 1
+
+11.
+SELECT *
+FROM sedeA
+WHERE sesso = "F" AND assuntoIl LIKE "2010%"
+
+12.
+SELECT *
+FROM sedeB
+WHERE stipendio < 900
+
+13.
+SELECT  DISTINCT stipendio
+FROM sedeB
+WHERE sesso = "M"
+ORDER BY stipendio 
+
+14.
+SELECT codR
+FROM sedeA
+ORDER BY codR
+
+15.
+SELECT codOperaio, codR
+FROM sedeB
+
+16.
+SELECT a.*,cognome, nome  
+FROM sedeA a, responsabili r
+WHERE a.codR = r.cod_resp
+
+17.
+SELECT *
+FROM sedeB, responsabili
+//prodotto cartesiano
+
+20.
+SELECT stipendio, codR
+FROM sedeB b
+WHERE strftime("%Y", assuntoIl) = "2011" 
+
+21.
+SELECT cognome, nome
+FROM sedeA a, responsabili r
+WHERE codOperaio = "UGUG" AND a.codR = r.cod_resp
+
+25
+--elenco degli operai della sede B assunti nel 2011 da quello assunto più
+--recentemente a quello assunto per primo
+SELECT  *
+FROM sedeB
+WHERE assuntoIl LIKE "2011%"
+ORDER BY assuntoIl DESC
+
+26
+--elenco dei codici dei responsabili degli operai/e della sede B che hanno uno
+--stipendio inferiore a X (fai la tabella supponendo che X sia uguale a 980)
+SELECT DISTINCT codR
+FROM sedeB
+WHERE stipendio < 980
+
+27
+--Codice e data assunzione degli operai/e della sede B del responsabile il cui
+--nome e cognome viene inserito da tastiera (fai la tabella supponendo di voler
+--conoscere le operaie di Fassa Maria) in ordine crescente di data di assunzione
+SELECT sedeB.codOperaio, sedeB.assuntoIl
+FROM sedeB, responsabili
+WHERE responsabili.nome = "Maria" AND responsabili.cognome = "Fassa"
+AND sedeB.codR = responsabili.cod_resp
+ORDER BY assuntoIl
+
+28
+--Lo stipendio massimo degli operai della sede A, quello minimo e quello medio
+SELECT max(stipendio) AS massimo, min(stipendio) AS minimo, avg(stipendio) AS medio
+FROM sedeA
+WHERE sesso LIKE "m"
+
+29
+--Contare gli operai/e della sede B con responsabile di codice X inserito da tastiera
+SELECT count(*)
+FROM sedeB
+WHERE codR = 2
+
+30
+--Contare le operaie della sede A con responsabile il cui nome e cognome viene inserito da tastiera
+SELECT count(*)
+FROM sedeA, responsabili
+WHERE responsabili.nome LIKE "Ivo" 
+AND responsabili.cognome LIKE "Lerda"
+AND responsabili.cod_resp = sedeA.codR
+AND sesso LIKE "f"
+
+31
+--per ogni responsabile della sede B elencare il numero di operai/e e lo stipendio medio
+SELECT count(*) AS numeroOperai, avg(stipendio) AS stipendio_medio, responsabili.nome AS nome_resp, responsabili.cognome AS cognome_resp
+FROM sedeB, responsabili
+WHERE codR = cod_resp
+GROUP BY codR
+
+32
+--per ogni stipendio elencare il numero di operai/e della sede A
+SELECT count(*), stipendio
+FROM sedeA
+GROUP BY stipendio
+
+33
+--elenco degli operai della sede A in ordine decrescente di assunzione che hanno come responsabile “Lerda Ivo”
+SELECT*
+FROM sedeA, responsabili
+WHERE responsabili.nome LIKE "Ivo" AND responsabili.cognome LIKE "Lerda"
+AND responsabili.cod_resp = sedeA.codR
+ORDER BY assuntoIl DESC
+
+34
+--il numero e lo stipendio massimo delle operaie della sede B il cui responsabile è inserito da tastiera (cognome e nome) 
+--(fai la tabella per “Dutto Luca”)
+SELECT count(*) AS numeroOperaie, max(stipendio) AS stipendio_massimo
+FROM sedeB, responsabili
+WHERE sedeB.sesso LIKE "f" AND responsabili.nome LIKE "LucA" AND responsabili.cognome LIKE "dutto"
+AND responsabili.cod_resp = sedeB.codR
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
